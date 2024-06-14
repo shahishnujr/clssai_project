@@ -14,9 +14,9 @@ from email.mime.text import MIMEText
 os.environ['OPENAI_API_KEY'] = openai_key
 username = "shahishnu379@gmail.com"
 password = "uczm hshi wwsv potn"
-def send_email(email_content, recipient_email):
+def send_email(email_content, recipient_email,email_subject):
     msg = MIMEText(email_content)
-    msg['Subject'] = "Leave request"
+    msg['Subject'] = email_subject
     msg['From'] = username
     msg['To'] = recipient_email
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -55,11 +55,11 @@ def check_emails():
                 else:
                     email_body = msg.get_payload(decode=True).decode()
 
-                check_ai(email_body,email_from)
+                check_ai(email_body,email_from,email_subject)
 
     mail.logout()
 
-def check_ai(body,email_from):
+def check_ai(body,email_from,email_subject):
     current_date = datetime.now().strftime("%B %d, %Y")
     prompt_template = PromptTemplate(
         input_variables=['email_from','current_date', 'body'],
@@ -67,14 +67,14 @@ def check_ai(body,email_from):
     )
     llm = ChatOpenAI(temperature=0.6)
     chain = LLMChain(llm=llm, prompt=prompt_template)
-    email = chain.run({
+    email = body+ chain.run({
         "email_from":email_from,
         "current_date":current_date,
         "body":body
     })
     print(email)
     recipient_email = "sair62995@gmail.com"
-    send_email(email, recipient_email)
+    send_email(email, recipient_email,email_subject)
 
 
 while True:
