@@ -73,7 +73,7 @@ def check_ai(body,email_from,email_subject):
         "body":body
     })
     print(email)
-    recipient_email = "sair62995@gmail.com"
+    recipient_email = "jjsanker@gmail.com"
     send_email(email, recipient_email,email_subject)
 
 
