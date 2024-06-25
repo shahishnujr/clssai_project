@@ -11,10 +11,8 @@ from apikey import openai_key
 import smtplib
 from email.mime.text import MIMEText
 from bs4 import BeautifulSoup
-
-
-# Importing necessary modules from your local paths
 from database import session, Email
+
 
 # Set OpenAI API key
 os.environ['OPENAI_API_KEY'] = openai_key
@@ -117,7 +115,7 @@ def check_ai(body, email_from, email_subject):
     to_date = soup.find_all('td')[2].text.strip()
 
     # Send the email with formatted HTML content
-    recipient_email = "smverappan@gmail.com"
+    recipient_email = "sair62995@gmail.com" # HR email here.
     send_email(response, recipient_email, email_subject)
 
     # Store email in database

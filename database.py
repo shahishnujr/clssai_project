@@ -1,8 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, JSON, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-import psycopg2
 
 # Ensure psycopg2-binary is being used
 engine = create_engine("postgresql+psycopg2://postgres:sairam2816@localhost/emails")
