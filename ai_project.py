@@ -11,7 +11,7 @@ from apikey import openai_key
 import smtplib
 from email.mime.text import MIMEText
 from bs4 import BeautifulSoup
-from database import session, Email
+from database import session, Email, EmployeeManager
 
 
 # Set OpenAI API key
@@ -114,9 +114,21 @@ def check_ai(body, email_from, email_subject):
     from_date = soup.find_all('td')[1].text.strip()
     to_date = soup.find_all('td')[2].text.strip()
 
-    # Send the email with formatted HTML content
-    recipient_email = "sair62995@gmail.com" # HR email here.
-    send_email(response, recipient_email, email_subject)
+
+    manager_email = session.query(EmployeeManager.manager_email).filter_by(employee_email=email_from).first() # tuple of manager email ids
+    #print(manager_email,"\n")
+    if manager_email:
+        manager_email = manager_email[0]
+    else:
+        manager_email = None
+
+    # Send the email with formatted HTML content to both HR and manager
+    recipient_email = "aiprojsample@gmail.com"  # HR email
+    if manager_email:
+        send_email(response, recipient_email, email_subject)
+        send_email(response, manager_email, email_subject)
+    else:
+        send_email(response, recipient_email, email_subject)
 
     # Store email in database
     email_record = Email(
@@ -128,6 +140,20 @@ def check_ai(body, email_from, email_subject):
     session.add(email_record)
     session.commit()
     print("Email stored in database")
+    """# Send the email with formatted HTML content
+    recipient_email = "aiprojsample@gmail.com" # HR email here.
+    send_email(response, recipient_email, email_subject)
+
+    # Store email in database
+    email_record = Email(
+        email_from=email_from,
+        email_subject=email_subject,
+        from_date=from_date,
+        to_date=to_date
+    )
+    session.add(email_record)
+    session.commit()
+    print("Email stored in database")"""
 
 
 # Run the email checker periodically
